@@ -1,8 +1,8 @@
-%global hash 97e0120
-%global snapshotdate 20210929
+%global hash a3e60c6
+%global snapshotdate 20220331
 
 Name: cros-guest-tools
-Version: 1.1
+Version: 1.2
 Release: %{snapshotdate}git%{hash}%{?dist}
 Summary: Chromium OS integration meta package
 
@@ -187,7 +187,7 @@ Requires: xprop
 Requires: xlsfonts
 Requires: xlsclients
 Requires: xlsatoms
-Requires: xev 
+Requires: xev
 Requires: xorg-x11-xauth
 Requires: vim-common
 BuildArch: noarch
@@ -281,7 +281,8 @@ ln -sf /opt/google/cros-containers/bin/sommelier %{buildroot}%{_bindir}/sommelie
 ln -sf /opt/google/cros-containers/cros-adapta %{buildroot}%{_datarootdir}/themes/CrosAdapta
 %endif
 
-install -m 644 cros-host-fonts/05-cros-fonts.conf %{buildroot}%{_sysconfdir}/fonts/conf.d/05-cros-fonts.conf
+
+install -m 644 cros-host-fonts/usr-share-fonts-chromeos.mount %{buildroot}%{_unitdir}/usr-share-fonts-chromeos.mount
 install -m 644 cros-garcon/third_party/garcon.py %{buildroot}/usr/share/ansible/plugins/callback/garcon.py
 install -m 440 cros-sudo-config/10-cros-nopasswd %{buildroot}%{_sysconfdir}/sudoers.d/10-cros-nopasswd
 install -m 440 cros-sudo-config/10-cros-nopasswd.pkla %{buildroot}/var/lib/polkit-1/localauthority/10-vendor.d/10-cros-nopasswd.pkla
@@ -351,7 +352,7 @@ echo "fi" >> %{buildroot}%{_sysconfdir}/profile.d/sommelier.sh
 %doc README.md
 
 %files -n cros-host-fonts
-%{_sysconfdir}/fonts/conf.d/05-cros-fonts.conf
+%{_unitdir}/usr-share-fonts-chromeos.mount
 %license LICENSE
 %doc README.md
 
