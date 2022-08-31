@@ -1,4 +1,4 @@
-HASH=a3e60c6
+HASH=9aeae2
 
 all: cros-guest-tools-${HASH}.tar.gz prep srpm
 

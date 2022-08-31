@@ -1,8 +1,8 @@
-%global hash a3e60c6
-%global snapshotdate 20220331
+%global hash 9aeae2
+%global snapshotdate 20220831
 
 Name: cros-guest-tools
-Version: 1.2
+Version: 1.3
 Release: %{snapshotdate}git%{hash}%{?dist}
 Summary: Chromium OS integration meta package
 
