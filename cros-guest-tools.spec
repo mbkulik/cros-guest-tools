@@ -1,5 +1,5 @@
-%global hash 9aeae2
-%global snapshotdate 20220831
+%global hash 51d426f
+%global snapshotdate 20231211
 
 Name: cros-guest-tools
 Version: 1.3
@@ -38,7 +38,6 @@ Requires: cros-garcon = %{version}-%{release}
 Requires: cros-host-fonts = %{version}-%{release}
 Requires: cros-notificationd = %{version}-%{release}
 Requires: cros-pulse-config = %{version}-%{release}
-Requires: cros-sftp = %{version}-%{release}
 Requires: cros-sommelier = %{version}-%{release}
 Requires: cros-sommelier-config = %{version}-%{release}
 Requires: cros-sudo-config = %{version}-%{release}
@@ -145,21 +144,6 @@ This package installs customized pulseaudio configurations to /etc/skel.
 "default.pa" is required as a workaround for the lack of udev in
 unprivileged containers.
 "daemon.conf" contains low latency configuration.
-
-%package -n cros-sftp
-Summary: SFTP service files for CrOS integration
-Requires(post): openssh-server
-BuildArch: noarch
-
-%description -n cros-sftp
-This package installs unit-files and support scripts for enabling SFTP
-integration with Chromium OS.
-
-%post -n cros-sftp
-%systemd_post cros-sftp.service
-
-%preun -n cros-sftp
-%systemd_preun cros-sftp.service
 
 %package -n cros-sommelier
 Summary: This package installs unit-files and support scripts for sommelier
@@ -305,7 +289,6 @@ install -m 644 cros-ui-config/01-cros-ui %{buildroot}%{_sysconfdir}/dconf/db/loc
 install -m 644 cros-garcon/cros-garcon.service %{buildroot}%{_userunitdir}/cros-garcon.service
 install -m 644 cros-sommelier/sommelier@.service %{buildroot}%{_userunitdir}/sommelier@.service
 install -m 644 cros-sommelier/sommelier-x@.service %{buildroot}%{_userunitdir}/sommelier-x@.service
-install -m 644 cros-sftp/cros-sftp.service %{buildroot}%{_unitdir}/cros-sftp.service
 install -m 644 cros-garcon/cros-garcon-override.conf %{buildroot}%{_userunitdir}/cros-garcon.service.d/cros-garcon-override.conf
 install -m 644 cros-sommelier-config/cros-sommelier-override.conf %{buildroot}%{_userunitdir}/sommelier@0.service.d/cros-sommelier-override.conf
 install -m 644 cros-sommelier-config/cros-sommelier-x-override.conf %{buildroot}%{_userunitdir}/sommelier-x@0.service.d/cros-sommelier-x-override.conf
@@ -378,11 +361,6 @@ echo "fi" >> %{buildroot}%{_sysconfdir}/profile.d/sommelier.sh
 %license LICENSE
 %doc README.md
 
-%files -n cros-sftp
-%{_unitdir}/cros-sftp.service
-%license LICENSE
-%doc README.md
-
 %files -n cros-sommelier
 %{_bindir}/sommelier
 %{_sysconfdir}/skel/.sommelierrc
@@ -417,6 +395,9 @@ echo "fi" >> %{buildroot}%{_sysconfdir}/profile.d/sommelier.sh
 %doc README.md
 
 %changelog
+* Mon Dec 11 2023 Michael B. Kulik mbk@michaelbkulik.com - 1.3-20231211git51d426f
+- Removed upstream deprected sftp service
+
 * Thu Aug 06 2020 Jason Montleon jmontleo@redhat.com - 1.0-0.39.20200806git19eab9e
 - Fix changelog error
 
