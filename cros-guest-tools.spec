@@ -1,5 +1,5 @@
-%global hash 9aeae2
-%global snapshotdate 20220831
+%global hash 51d426f
+%global snapshotdate 20231211
 
 Name: cros-guest-tools
 Version: 1.3
