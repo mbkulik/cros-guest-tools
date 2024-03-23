@@ -99,6 +99,7 @@ Requires: PackageKit
 Requires: ansible
 Requires: mailcap
 Requires: systemd
+Requires: openssh-server
 BuildArch: noarch
 
 %description -n cros-garcon
