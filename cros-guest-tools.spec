@@ -1,5 +1,5 @@
-%global hash 51d426f
-%global snapshotdate 20231211
+%global hash 0048a8e
+%global snapshotdate 20240323
 
 Name: cros-guest-tools
 Version: 1.3
@@ -395,6 +395,9 @@ echo "fi" >> %{buildroot}%{_sysconfdir}/profile.d/sommelier.sh
 %doc README.md
 
 %changelog
+* Sat Mar 23 2024 Michael B. Kulik mbk@michaelbkulik.com - 1.3-20240323git0048a8e
+- Sync with upstream
+
 * Mon Dec 11 2023 Michael B. Kulik mbk@michaelbkulik.com - 1.3-20231211git51d426f
 - Removed upstream deprected sftp service
 
