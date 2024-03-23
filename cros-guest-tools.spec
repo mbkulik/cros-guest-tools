@@ -2,7 +2,7 @@
 %global snapshotdate 20240323
 
 Name: cros-guest-tools
-Version: 1.3
+Version: 1.4
 Release: %{snapshotdate}git%{hash}%{?dist}
 Summary: Chromium OS integration meta package
 
@@ -265,6 +265,9 @@ ln -sf /opt/google/cros-containers/bin/sommelier %{buildroot}%{_bindir}/sommelie
 ln -sf /opt/google/cros-containers/cros-adapta %{buildroot}%{_datarootdir}/themes/CrosAdapta
 %endif
 
+#Fix for hardcoded garcon sftp-server location
+mkdir -p /usr/lib/openssh/
+ln -sf /usr/libexec/openssh/sftp-server /usr/lib/openssh/sftp-server
 
 install -m 644 cros-host-fonts/usr-share-fonts-chromeos.mount %{buildroot}%{_unitdir}/usr-share-fonts-chromeos.mount
 install -m 644 cros-garcon/third_party/garcon.py %{buildroot}/usr/share/ansible/plugins/callback/garcon.py
