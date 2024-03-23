@@ -332,6 +332,7 @@ echo "fi" >> %{buildroot}%{_sysconfdir}/profile.d/sommelier.sh
 %{_userunitdir}/cros-garcon.service
 %{_userunitdir}/cros-garcon.service.d
 /usr/share/ansible/plugins/callback/garcon.py
+/usr/lib/openssh/sftp-server
 %license LICENSE
 %doc README.md
 
