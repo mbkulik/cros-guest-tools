@@ -258,16 +258,14 @@ mkdir -p %{buildroot}%{_sysconfdir}/sudoers.d
 mkdir -p %{buildroot}%{_sysconfdir}/fonts/conf.d
 mkdir -p %{buildroot}/var/lib/polkit-1/localauthority/10-vendor.d
 mkdir -p %{buildroot}/usr/share/ansible/plugins/callback
+mkdir -p %{buildroot}/usr/lib/openssh
 
 ln -sf /opt/google/cros-containers/bin/sommelier %{buildroot}%{_bindir}/sommelier
 
 %if 0%{?fedora}
 ln -sf /opt/google/cros-containers/cros-adapta %{buildroot}%{_datarootdir}/themes/CrosAdapta
+ln -sf /usr/libexec/openssh/sftp-server %{buildroot}/usr/lib/openssh/sftp-server
 %endif
-
-#Fix for hardcoded garcon sftp-server location
-mkdir -p /usr/lib/openssh/
-ln -sf /usr/libexec/openssh/sftp-server /usr/lib/openssh/sftp-server
 
 install -m 644 cros-host-fonts/usr-share-fonts-chromeos.mount %{buildroot}%{_unitdir}/usr-share-fonts-chromeos.mount
 install -m 644 cros-garcon/third_party/garcon.py %{buildroot}/usr/share/ansible/plugins/callback/garcon.py
