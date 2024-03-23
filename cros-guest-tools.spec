@@ -397,6 +397,9 @@ echo "fi" >> %{buildroot}%{_sysconfdir}/profile.d/sommelier.sh
 %doc README.md
 
 %changelog
+* Sat Mar 23 2024 Michael B. Kulik mbk@michaelbkulik.com - 1.4-20240323git0048a8e
+- enable sftp file sharing between container and host
+
 * Sat Mar 23 2024 Michael B. Kulik mbk@michaelbkulik.com - 1.3-20240323git0048a8e
 - Sync with upstream
 
