@@ -99,6 +99,7 @@ Requires: PackageKit
 Requires: ansible
 Requires: mailcap
 Requires: systemd
+Requires: openssh-server
 BuildArch: noarch
 
 %description -n cros-garcon
@@ -258,16 +259,14 @@ mkdir -p %{buildroot}%{_sysconfdir}/sudoers.d
 mkdir -p %{buildroot}%{_sysconfdir}/fonts/conf.d
 mkdir -p %{buildroot}/var/lib/polkit-1/localauthority/10-vendor.d
 mkdir -p %{buildroot}/usr/share/ansible/plugins/callback
+mkdir -p %{buildroot}/usr/lib/openssh
 
 ln -sf /opt/google/cros-containers/bin/sommelier %{buildroot}%{_bindir}/sommelier
 
 %if 0%{?fedora}
 ln -sf /opt/google/cros-containers/cros-adapta %{buildroot}%{_datarootdir}/themes/CrosAdapta
+ln -sf %{_libexecdir}/openssh/sftp-server %{buildroot}/usr/lib/openssh/sftp-server
 %endif
-
-#Fix for hardcoded garcon sftp-server location
-mkdir -p /usr/lib/openssh/
-ln -sf /usr/libexec/openssh/sftp-server /usr/lib/openssh/sftp-server
 
 install -m 644 cros-host-fonts/usr-share-fonts-chromeos.mount %{buildroot}%{_unitdir}/usr-share-fonts-chromeos.mount
 install -m 644 cros-garcon/third_party/garcon.py %{buildroot}/usr/share/ansible/plugins/callback/garcon.py
@@ -334,6 +333,7 @@ echo "fi" >> %{buildroot}%{_sysconfdir}/profile.d/sommelier.sh
 %{_userunitdir}/cros-garcon.service
 %{_userunitdir}/cros-garcon.service.d
 /usr/share/ansible/plugins/callback/garcon.py
+/usr/lib/openssh
 %license LICENSE
 %doc README.md
 
@@ -398,6 +398,9 @@ echo "fi" >> %{buildroot}%{_sysconfdir}/profile.d/sommelier.sh
 %doc README.md
 
 %changelog
+* Sat Mar 23 2024 Michael B. Kulik mbk@michaelbkulik.com - 1.4-20240323git0048a8e
+- enable sftp file sharing between container and host
+
 * Sat Mar 23 2024 Michael B. Kulik mbk@michaelbkulik.com - 1.3-20240323git0048a8e
 - Sync with upstream
 
