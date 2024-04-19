@@ -2,7 +2,7 @@
 %global snapshotdate 20240419
 
 Name: cros-guest-tools
-Version: 1.4
+Version: 1.5
 Release: %{snapshotdate}git%{hash}%{?dist}
 Summary: Chromium OS integration meta package
 
@@ -37,7 +37,7 @@ Requires: cros-logging = %{version}-%{release}
 Requires: cros-garcon = %{version}-%{release}
 Requires: cros-host-fonts = %{version}-%{release}
 Requires: cros-notificationd = %{version}-%{release}
-Requires: cros-pulse-config = %{version}-%{release}
+Requires: cros-pipe-config = %{version}-%{release}
 Requires: cros-sommelier = %{version}-%{release}
 Requires: cros-sommelier-config = %{version}-%{release}
 Requires: cros-sudo-config = %{version}-%{release}
@@ -134,17 +134,20 @@ This package installs D-Bus on-demand service specification for notificationd.
 %preun -n cros-notificationd
 %systemd_user_preun cros-notificationd.service
 
-%package -n cros-pulse-config
-Summary: PulseAudio helper for Chromium OS integration.
-Requires: alsa-plugins-pulseaudio
-Requires: pulseaudio-utils
+%package -n cros-pipe-config
+Summary: PipeWire helper for ChromiumOS integration
+Requires: pipewire
+Requires: pipewire-pulseaudio
+Requires: pipewire-alsa
+Requires: wireplumber
 BuildArch: noarch
 
-%description -n cros-pulse-config
-This package installs customized pulseaudio configurations to /etc/skel.
-"default.pa" is required as a workaround for the lack of udev in
-unprivileged containers.
-"daemon.conf" contains low latency configuration.
+%description -n cros-pipe-config
+This package installs customized pipewire and pipewire-pulse configurations
+to /etc/pipewire/pipewire.conf.d and /etc/pipewire/pipewire-pulse.conf.d.
+The custom configurations are:
+* Set a higher minimum buffer size to avoid audio glitches.
+* Load audio sink and source manually because of the lack of udev.
 
 %package -n cros-sommelier
 Summary: This package installs unit-files and support scripts for sommelier
@@ -240,7 +243,9 @@ mkdir -p %{buildroot}%{_sysconfdir}/gtk-3.0
 mkdir -p %{buildroot}%{_sysconfdir}/polkit-1/localauthority/50-local.d
 mkdir -p %{buildroot}%{_sysconfdir}/xdg
 mkdir -p %{buildroot}%{_sysconfdir}/profile.d
-mkdir -p %{buildroot}%{_sysconfdir}/skel/.config/pulse
+mkdir -p %{buildroot}%{_sysconfdir}/skel/.config
+mkdir -p %{buildroot}/usr/share/pipewire/pipewire.conf.d
+mkdir -p %{buildroot}/usr/share/pipewire/pipewire-pulse.conf.d
 mkdir -p %{buildroot}%{_sysconfdir}/tmpfiles.d
 mkdir -p %{buildroot}%{_udevrulesdir}
 mkdir -p %{buildroot}%{_unitdir}
@@ -278,8 +283,8 @@ install -m 644 cros-sommelier/skel.sommelierrc %{buildroot}%{_sysconfdir}/skel/.
 install -m 644 cros-garcon/skel.cros-garcon.conf %{buildroot}%{_sysconfdir}/skel/.config/cros-garcon.conf
 install -m 644 cros-wayland/skel.weston.ini %{buildroot}%{_sysconfdir}/skel/.config/weston.ini
 install -m 644 cros-wayland/10-cros-virtwl.rules %{buildroot}%{_udevrulesdir}/10-cros-virtwl.rules
-install -m 644 cros-pulse-config/default.pa %{buildroot}%{_sysconfdir}/skel/.config/pulse/default.pa
-install -m 644 cros-pulse-config/daemon.conf %{buildroot}%{_sysconfdir}/skel/.config/pulse/daemon.conf
+install -m 644 cros-pipe-config/pipewire/crostini.conf %{buildroot}/usr/share/pipewire/pipewire.conf.d/crostini.conf
+install -m 644 cros-pipe-config/pipewire-pulse/crostini.conf %{buildroot}/usr/share/pipewire/pipewire-pulse.conf.d/crostini.conf
 install -m 755 cros-garcon/garcon-terminal-handler %{buildroot}%{_bindir}/garcon-terminal-handler
 install -m 755 cros-garcon/garcon-url-handler %{buildroot}%{_bindir}/garcon-url-handler
 install -m 644 cros-notificationd/org.freedesktop.Notifications.service %{buildroot}%{_datarootdir}/dbus-1/services/org.freedesktop.Notifications.service
@@ -358,9 +363,9 @@ echo "fi" >> %{buildroot}%{_sysconfdir}/profile.d/sommelier.sh
 %license LICENSE
 %doc README.md
 
-%files -n cros-pulse-config
-%{_sysconfdir}/skel/.config/pulse/daemon.conf
-%{_sysconfdir}/skel/.config/pulse/default.pa
+%files -n cros-pipe-config
+/usr/share/pipewire/pipewire.conf.d/crostini.conf
+/usr/share/pipewire/pipewire-pulse.conf.d/crostini.conf
 %license LICENSE
 %doc README.md
 
