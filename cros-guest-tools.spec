@@ -1,5 +1,5 @@
-%global hash 0048a8e
-%global snapshotdate 20240323
+%global hash e08fb07
+%global snapshotdate 20240419
 
 Name: cros-guest-tools
 Version: 1.4
@@ -398,6 +398,9 @@ echo "fi" >> %{buildroot}%{_sysconfdir}/profile.d/sommelier.sh
 %doc README.md
 
 %changelog
+* Fri Apr 19 2024 Michael B. Kulik mbk@michaelbkulik.com - 1.4-20240419gite08fb07
+- sync with upstream release
+
 * Sat Mar 23 2024 Michael B. Kulik mbk@michaelbkulik.com - 1.4-20240323git0048a8e
 - enable sftp file sharing between container and host
 
