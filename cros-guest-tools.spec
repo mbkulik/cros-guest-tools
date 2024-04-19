@@ -1,9 +1,8 @@
 %global hash e08fb07
-%global snapshotdate 20240419
 
 Name: cros-guest-tools
 Version: 1.5
-Release: %{snapshotdate}git%{hash}%{?dist}
+Release: 1%{?dist}
 Summary: Chromium OS integration meta package
 
 License: BSD
