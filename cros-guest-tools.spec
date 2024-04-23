@@ -1,7 +1,7 @@
 %global hash e08fb07
 
 Name: cros-guest-tools
-Version: 1.5
+Version: 2
 Release: 1%{?dist}
 Summary: Chromium OS integration meta package
 
