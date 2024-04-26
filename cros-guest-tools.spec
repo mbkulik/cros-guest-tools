@@ -1,7 +1,7 @@
 %global hash e08fb07
 
 Name: cros-guest-tools
-Version: 2
+Version: 2.0
 Release: 1%{?dist}
 Summary: Chromium OS integration meta package
 
@@ -43,6 +43,7 @@ Requires: cros-sudo-config = %{version}-%{release}
 Requires: cros-systemd-overrides = %{version}-%{release}
 Requires: cros-ui-config = %{version}-%{release}
 Requires: cros-wayland = %{version}-%{release}
+requires: cros-port-listener = %{version}-%{release}
 
 %description
 This package has dependencies on all other packages necessary for Chromium OS
@@ -229,6 +230,26 @@ BuildArch: noarch
 This package provides config files and udev rules to improve the Wayland
 experience under CrOS.
 
+%package -n cros-port-listener
+Summary: Port listener service from Chromium OS
+Requires: systemd-udev
+BuildArch: noarch
+
+%description -n cros-port-listener
+This package provides configuration to start Chromimum OS's port listener
+service which tracks listen open sockets and signals the host when they change.
+This allows the Chromium browser within the host to connect to those sockets
+as if they were local to the host.
+
+%post -n cros-port-listener
+%systemd_user_post cros-port-listener.service
+
+%preun -n cros-port-listener
+%systemd_user_preun cros-port-listener.service
+
+$postun -n cros-port-listener
+%systemd_user_postun cros-port-listener.service
+
 %prep
 %setup -q -c
 
@@ -257,8 +278,8 @@ mkdir -p %{buildroot}%{_userunitdir}/sommelier@0.service.d
 mkdir -p %{buildroot}%{_userunitdir}/sommelier@1.service.d
 mkdir -p %{buildroot}%{_userunitdir}/sommelier-x@0.service.d
 mkdir -p %{buildroot}%{_userunitdir}/sommelier-x@1.service.d
-mkdir -p %{buildroot}%{_userunitdir}/pulseaudio.service.wants
 mkdir -p %{buildroot}%{_userunitdir}/default.target.wants
+mkdir -p %{buildroot}%{_userunitdir}/cros-port-listener.service.d
 mkdir -p %{buildroot}%{_sysconfdir}/sudoers.d
 mkdir -p %{buildroot}%{_sysconfdir}/fonts/conf.d
 mkdir -p %{buildroot}/var/lib/polkit-1/localauthority/10-vendor.d
@@ -311,6 +332,10 @@ sed -i 's/false/true/g' %{buildroot}%{_sysconfdir}/skel/.config/cros-garcon.conf
 sed -i '1i if [ "$UID" -ne "0" ]; then' %{buildroot}%{_sysconfdir}/profile.d/sommelier.sh
 sed -i '1i export XDG_RUNTIME_DIR=/run/user/$UID' %{buildroot}%{_sysconfdir}/profile.d/sommelier.sh
 echo "fi" >> %{buildroot}%{_sysconfdir}/profile.d/sommelier.sh
+
+install -m 644 cros-port-listener/10-cros-port-listener.rules %{buildroot}%{_udevrulesdir}/10-cros-port-listener.rules
+install -m 644 cros-port-listener/cros-port-listener.service %{buildroot}%{_userunitdir}/cros-port-listener.service.d/cros-port-listener.service
+
 
 %files
 %dir %{_sysconfdir}/skel/.config
@@ -401,7 +426,19 @@ echo "fi" >> %{buildroot}%{_sysconfdir}/profile.d/sommelier.sh
 %license LICENSE
 %doc README.md
 
+%files -n cros-port-listener
+%{_userunitdir}/cros-port-listener.service.d
+%{_userunitdir}/cros-port-listener.service.d/cros-port-listener.service
+%{_udevrulesdir}/10-cros-port-listener.rules
+%license LICENSE
+%doc README.md
+
+
 %changelog
+* Fri Apr 26 2024 Michael B. Kulik mbk@michaelbkulik.com - 2.0
+- enable pipewire support
+- enable cro port listener service
+
 * Fri Apr 19 2024 Michael B. Kulik mbk@michaelbkulik.com - 1.4-20240419gite08fb07
 - sync with upstream release
 
